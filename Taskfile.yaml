@@ -1,0 +1,38 @@
+# https://taskfile.dev
+
+version: "3"
+
+tasks:
+  gen:
+    cmds:
+      # Run this when you don't have buf installed
+      # - protoc --twirp_out=. --go_out=. rpc/greeter/v1/service.proto
+      - buf generate
+      - go mod tidy
+
+  gen-ts:
+    cmds:
+      - buf generate --template buf.gen-ts.yaml
+
+  lint:
+    cmds:
+      - golangci-lint run ./...
+      - buf lint
+
+  clean:
+    cmds:
+      - rm rpc/greeter/v1/*.go
+      - rm -rf client/node_modules
+      - rm -rf client/src/gen
+      - rm build/*
+
+  build:
+    cmds:
+      - go build -o build/greeter ./cmd/greeter
+
+  default:
+    cmds:
+      - task: gen
+      - task: lint
+      - task: build
+      - ./build/greeter

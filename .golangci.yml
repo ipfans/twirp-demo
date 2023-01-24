@@ -1,0 +1,133 @@
+# This file contains all available configuration options
+# with their default values (in comments).
+#
+# This file is not a configuration example,
+# it contains the exhaustive configuration with explanations of the options.
+
+# Options for analysis running.
+run:
+  # Timeout for analysis
+  timeout: 5m
+
+  # List of build tags, all linters use it.
+  build-tags:
+    - dynamic
+    - integration
+
+  # If set we pass it to "go list -mod={option}". From "go help modules":
+  # If invoked with -mod=readonly, the go command is disallowed from the implicit
+  # automatic updating of go.mod described above. Instead, it fails when any changes
+  # to go.mod are needed. This setting is most useful to check that go.mod does
+  # not need updates, such as in a continuous integration and testing system.
+  # If invoked with -mod=vendor, the go command assumes that the vendor
+  # directory holds the correct copies of dependencies and ignores
+  # the dependency descriptions in go.mod.
+  #
+  # Allowed values: readonly|vendor|mod
+  # By default, it isn't set.
+  modules-download-mode: readonly
+
+  # Which dirs to skip: issues from them won't be reported.
+  # Can use regexp here: `generated.*`, regexp is applied on full path.
+  skip-dirs:
+    - client/
+    - docs/
+    - src/mock/
+    - etc/
+    - build/
+    - utils/
+    - rpc/
+
+output:
+  sort-results: true
+
+linters-settings:
+  gocritic:
+    # Which checks should be enabled; can't be combined with 'disabled-checks'.
+    # See https://go-critic.github.io/overview#checks-overview.
+    # To check which checks are enabled run `GL_DEBUG=gocritic golangci-lint run`.
+    # By default, list of stable checks is used.
+    enabled-checks:
+      []
+      # - nestingReduce
+      # - unnamedResult
+      # - ruleguard
+      # - truncateCmp
+    # Enable multiple checks by tags, run `GL_DEBUG=gocritic golangci-lint run` to see all tags and checks.
+    # See https://github.com/go-critic/go-critic#usage -> section "Tags".
+    # Default: []
+    disabled-checks:
+      - whyNoLint
+    enabled-tags:
+      - diagnostic
+      - style
+      - performance
+      - experimental
+      - opinionated
+    # Settings passed to gocritic.
+    # The settings key is the name of a supported gocritic checker.
+    # The list of supported checkers can be find in https://go-critic.github.io/overview.
+    settings:
+      ruleguard:
+        # Enable debug to identify which 'Where' condition was rejected.
+        # The value of the parameter is the name of a function in a ruleguard file.
+        #
+        # When a rule is evaluated:
+        # If:
+        #   The Match() clause is accepted; and
+        #   One of the conditions in the Where() clause is rejected,
+        # Then:
+        #   ruleguard prints the specific Where() condition that was rejected.
+        #
+        # The flag is passed to the ruleguard 'debug-group' argument.
+        # Default: ""
+        debug: "emptyDecl"
+        # Determines the behavior when an error occurs while parsing ruleguard files.
+        # If flag is not set, log error and skip rule files that contain an error.
+        # If flag is set, the value must be a comma-separated list of error conditions.
+        # - 'all':    fail on all errors.
+        # - 'import': ruleguard rule imports a package that cannot be found.
+        # - 'dsl':    gorule file does not comply with the ruleguard DSL.
+        # Default: ""
+        failOn: dsl
+
+linters:
+  # Disable all linters.
+  disable-all: true
+
+  # Enable specific linter
+  # https://golangci-lint.run/usage/linters/#enabled-by-default-linters
+  enable:
+    - staticcheck
+    - unused
+    - gosimple
+    - ineffassign
+    - typecheck
+    - stylecheck
+    - gosec
+    - unconvert
+    - gofmt
+    - unparam
+    - nakedret
+    - gochecknoinits
+    - depguard
+    - gocyclo
+    - misspell
+    - megacheck
+    - goimports
+    - bodyclose
+    - errorlint
+    - gofumpt
+    - makezero
+    - nilerr
+    - noctx
+    - tparallel
+    - errcheck
+    - govet
+    - dupl
+    - gochecknoinits
+    - gocritic
+    - gocyclo
+
+issues:
+  fix: true

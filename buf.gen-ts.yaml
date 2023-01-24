@@ -1,0 +1,11 @@
+version: v1
+
+plugins:
+  - name: es
+    path: ./client/node_modules/.bin/protoc-gen-es
+    opt: target=ts
+    out: client/src/gen
+  - name: twirp-es
+    path: ./client/src/protoc-gen-twirp-es.ts
+    opt: target=ts
+    out: client/src/gen
